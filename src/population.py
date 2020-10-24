@@ -5,7 +5,7 @@ import seaborn as sns
 import csv
 
 ## Loading the input file
-df1 = pd.read_csv('../input/censustract-00-10.csv')
+df1 = pd.read_csv('./input/censustract-00-10.csv')
 df2=df1.copy()
 
 
@@ -72,7 +72,7 @@ output_df = pd.DataFrame(df5)
 ## keep first duplicate row
 FinalResult_df1 = output_df.drop_duplicates().reset_index(drop=True) 
 FinalResult_df1.sort_values(["CBSA09"], axis=0,ascending=True, inplace=True) 
-FinalResult_df1.to_csv('../output/report.csv',index=False)
+FinalResult_df1.to_csv('./output/report.csv',index=False)
 
 
 
