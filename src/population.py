@@ -1,11 +1,11 @@
-## Importing libararies 
+## Importing libraries
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import csv
 
 ## Loading the input file
-df1 = pd.read_csv('../input/censustract-00-10.csv')
+df1 = pd.read_csv('../input/censustract-00-10.csv', encoding = "ISO-8859-1", engine='python')
 df2=df1.copy()
 
 
@@ -17,7 +17,7 @@ df2['CBSA09'] = df2.apply(lambda row: row['COU10'] if np.isnan(row['CBSA09']) el
 df2["TRACTS"]=df2.groupby("CBSA09")["CBSA09"].transform("count")
 
 
-## Function to removing "," from object datatype and 
+## Function to removing "," from object datatype and
 ## converting them to int & sum the values
 def Fo1(ser):
     lst = list(ser)
@@ -47,10 +47,23 @@ dict3 = dict(df3)
 df2["NewAvePPCHG"]=df2["CBSA09"].map(dict3)
 
 
+## forming a state identifier for processing missing value
+df7 = df2[["ST10","CBSA_T"]]
+df8 = df7.drop_duplicates().reset_index(drop=True)
+df8["NewCBSA_T"] = df8["CBSA_T"].str[-2:]
+df9=df8[["ST10","NewCBSA_T"]]
+df10=df9.groupby("ST10").last().reset_index()
+dict5=dict(df10)
+
+
+## key dictionary for state and corresponding CBSA_T file
+new_keys = list(dict5['ST10'])
+new_values = list(dict5['NewCBSA_T'])
+dict7 = dict(zip(new_keys, new_values))
+
+
 ## replace the NaN values in CBSA_T with the curresponding State
 def foo(x):
-    #print(type(x))
-    #print(x[0], x[1])
     if str(x[1])=='nan':
         return "NaN, " + dict7[x[0]]
     else:
@@ -70,9 +83,9 @@ output_df = pd.DataFrame(df5)
 
 ## Preparing final output csv file
 ## keep first duplicate row
-FinalResult_df1 = output_df.drop_duplicates().reset_index(drop=True) 
-FinalResult_df1.sort_values(["CBSA09"], axis=0,ascending=True, inplace=True) 
+FinalResult_df1 = output_df.drop_duplicates().reset_index(drop=True)
+FinalResult_df1.sort_values(["CBSA09"], axis=0,ascending=True, inplace=True)
 FinalResult_df1.to_csv('../output/report.csv',index=False)
 
-
+## end of program
 
