@@ -47,7 +47,10 @@ dict3 = dict(df3)
 df2["NewAvePPCHG"]=df2["CBSA09"].map(dict3)
 
 
-## forming a state identifier for processing missing value
+## forming a state identifier for processing missing values in CBSA_T
+## we will use ST10 as baseline to identify the state and extract the state initials that are already correspond to the available state descriptions in CBSA_T
+## the state identifier will make it easier for the a human to understand which state these missing values belong to.
+
 df7 = df2[["ST10","CBSA_T"]]
 df8 = df7.drop_duplicates().reset_index(drop=True)
 df8["NewCBSA_T"] = df8["CBSA_T"].str[-2:]
