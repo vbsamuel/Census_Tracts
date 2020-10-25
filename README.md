@@ -33,7 +33,7 @@ The sample input file is taken from the data file at [2000 to 2010 Census Tract 
 
 Metropolitan and Micropolitan statistical areas can span one or more counties and states. For instance, "New York-Northern New Jersey-Long Island, NY-NJ-PA" is a Metropolitan Statistical Area and Core Based Statistical Area that is centered around New York City, extends east through Long Island and west through northern New Jersey and parts of Pennsylvania.
 
-For this challenge, we want to know for each Core Based Statistical Area, the 
+We will get an output file that provides information about each of the Core Based Statistical Area:
 * total number of census tracts, 
 * total population in 2000, 
 * total population in 2010 and 
@@ -41,20 +41,25 @@ For this challenge, we want to know for each Core Based Statistical Area, the
 
 Note that census tracts within a Core Based Statstical Area are not necessarily grouped together in the input file, and that there will be a small minority of census tracts that fall outside of any Core Based Statistical Area.
 
-Finally, the Census provides the data in the form of an [Excel spreadsheet](http://www2.census.gov/programs-surveys/decennial/tables/time-series/tract-change-00-10/censustract-00-10.xlsx) but you can assume the input file we'll be using to test your code will be in the form of a comma-separated-value file (see [here](https://www2.census.gov/programs-surveys/metro-micro/technical-documentation/file-layout/tract-change-00-10/censustract-00-10-layout.doc) for more information on the data dictionary). If you are having difficulty converting the Excel spreadsheet into a CSV file, we've made the converted file available to you [here](https://drive.google.com/file/d/14O7dSplprnptDYkn1Jg4M1ojBIkVAsVP/view?usp=sharing).
-
 
 ## Expected output
 
 After reading and processing the input file, the code will create an output file, `report.csv`, with as many lines as unique Core Based Statistical Areas found in the input file. 
 
-Following fields will be written in this order:
-* Core Based Statstical Area Code (i.e., CBSA09). Any value from 1 to 720 corresponds to COU10 column in the input file. This is because the original CBSA09 column had NULL data. Values from 10020 and upwards (all 5-digit numbers) corresponds to the original CSBA09 value.
-* Core Based Statistical Area Code Title (i.e., CBSA_T). For the CBSA_T missing we have substituted with "NaN,<<state>>". The "<<state>>" value is two digit alphabet corresponding to the state value from ST10. Instead of using plain "ST10" we used the state prefix such as CA, TX, etc to make it easy for reading.
-* total number of census tracts
-* total population in the CBSA in 2000
-* total population in the CBSA in 2010
-* average population percent change for census tracts in this CBSA. Round to two decimal places using standard rounding conventions. (Please note that the Any percentage between 0.005% and 0.010%, inclusive, should round to 0.01% and anything less than 0.005% should round to 0.00%)
+Following 5 data elements will be written to the output file in the below order:
+
+**CBSA09 : Core Based Statstical Area Code (i.e., CBSA09). Any value from 1 to 720 corresponds to COU10 column in the input file. This is because the original CBSA09 column had NULL data. Values from 10020 and upwards (all 5-digit numbers) corresponds to the original CSBA09 value.
+
+**CBSA_T: Core Based Statistical Area Code Title (i.e., CBSA_T). For the CBSA_T missing we have substituted with "NaN, STATE INITIAL". The "STATE INITIAL" value is two digit alphabet corresponding to the state value from ST10. Instead of using plain "ST10" we used the state prefix such as CA, TX, etc to make it easy for reading.
+  
+**TRACTS: total number of census tracts for the Core Based Statistical Area Title
+
+**Pop2000	: total population in the CBSA in 2000
+
+**Pop2010	:total population in the CBSA in 2010
+
+**NewAvePPCHG : average population percent change for census tracts in this CBSA. Round to two decimal places using standard rounding conventions. (Please note that the Any percentage between 0.005% and 0.010%, inclusive, should round to 0.01% and anything less than 0.005% should round to 0.00%)
+
 
 The lines in the output file will be sorted by Core Based Statstical Area Code (ascending)
 
