@@ -3,7 +3,9 @@
 ## Table of Contents
 1. [Overview](README.md#Overview)
 1. [Input Dataset](README.md#input-dataset)
+1. [Data Engineering](README.md#Data-Engineering)
 1. [Expected output](README.md#expected-output)
+
 
 
 ## Overview
@@ -41,6 +43,15 @@ We will get an output file that provides information about each of the Core Base
 
 Note that census tracts within a Core Based Statstical Area are not necessarily grouped together in the input file, and that there will be a small minority of census tracts that fall outside of any Core Based Statistical Area.
 
+## Data Engineering
+
+The program handles following scenarios of the input file:
+- Making the input file reading easier for frequent use. The program will automatically read the input file from the top most position in the file directory. This mechanism becomes useful for frequent updates such as nightly, monthly, quarterly, etc.
+- Inconsistant data types for the columns: we have noticed that sometimes the elements are integers and sometimes they are strings. We handle both scenarios. 
+- Missing data: We have found a lot of missing elements in the file. For the required 6 data elements, we implemented an appropriate strategy by either a substitued value or a derived value in-place of the null or empty cell. This is done to provide a holistic picture of the result.
+- Odd elements in numbers columns: Since we don't control how the original file is created and published, we notice that it is possible for numbers columns to have "(X)" to identify a non-determinant number value such as a percentage gain for rows that didn't have a start value. We removed the "(X)" and substituted with null value.
+- Making data readable: In the areas where possible, we made the data easier to understand as supposed to random numbers. Ex. CBSA_T has a blank data element and we would produce the output file with "NaN, State Intital". This would mean that the original data was missing or empty and we had identified which state this data belongs to and put in an state identifier for making it easier for trouble shooting. We also make the final data sorted by ascending order (this also helps for easier look-ups)!.
+
 
 ## Expected output
 
@@ -68,4 +79,7 @@ Given the above `censustract-00-10.csv` input file, we'd expect an output file, 
 28540,"Ketchikan, AK",4,14074,13477,-4.41
 46900,"Vernon, TX",4,14679,13535,-10.25
 ```
+
+
+
 
