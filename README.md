@@ -50,20 +50,20 @@ Following 6 data elements will be written to the output file in the below order:
 
 (1) CBSA09 : Core Based Statstical Area Code (i.e., CBSA09). Any value from 1 to 720 corresponds to COU10 column in the input file. This is because the original CBSA09 column had NULL data. Values from 10020 and upwards (all 5-digit numbers) corresponds to the original CSBA09 value.
 
-(2) CBSA_T : Core Based Statistical Area Code Title (i.e., CBSA_T). For the CBSA_T missing we have substituted with "NaN, STATE INITIAL". The "STATE INITIAL" value is two digit alphabet corresponding to the state value from ST10. Instead of using plain "ST10" we used the state prefix such as CA, TX, etc to make it easy for reading.
+(2) CBSA_T : Core Based Statistical Area Code Title (i.e. CBSA_T). For the CBSA_T missing values we have substituted with "NaN, STATE INITIAL". The "STATE INITIAL" value is two digit alphabet to identify which state it belongs. The State Initiates are derived from ST10 and available CBSA_T data from the data set. Instead of using plain "ST10" we used the state prefix such as CA, TX, WY etc. to make it easy for the reader to identify which state the row belongs to. This helps in reducing time for cross-reference and excel look-ups.
   
 (3) TRACTS : Total number of census tracts for the Core Based Statistical Area Title. This is calculated by total count of unique tracts in the Core Based Statistical Area Title.
 
-(4) Pop2000	: total population in the CBSA in 2000. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2000.
+(4) Pop2000	: Total population in the CBSA in 2000. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2000.
 
-(5) Pop2010	:total population in the CBSA in 2010. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2010.
+(5) Pop2010	:Total population in the CBSA in 2010. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2010.
 
-(6) NewAvePPCHG : average population percent change for census tracts in the Core Based Statistical Area Title. The unit is in %-percentage. We have rounded the value to two decimal places using standard rounding conventions. (Please note that the Any percentage between 0.005% and 0.010%, inclusive, should round to 0.01% and anything less than 0.005% should round to 0.00%)
+(6) NewAvePPCHG : Average population percent change for census tracts in the Core Based Statistical Area Title. The unit is in %-percentage. We have rounded the value to two decimal places using standard rounding conventions. (Please note that the any percentage between 0.005% and 0.010%, inclusive has been rounded to 0.01% and anything less than 0.005% has been round to 0.00%)
 
 
 The lines in the output file will be sorted by Core Based Statstical Area Code (ascending)
 
-Given the above `censustract-00-10.csv` input file, we'd expect an output file, `report.csv`, in the following format
+Given the above `censustract-00-10.csv` input file, we'd expect an output file, `report.csv` to be stored in the 'output' file directory. Below is an example of report.csv file format
 ```
 28540,"Ketchikan, AK",4,14074,13477,-4.41
 46900,"Vernon, TX",4,14679,13535,-10.25
