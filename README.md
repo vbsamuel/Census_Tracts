@@ -10,7 +10,7 @@
 
 ## Overview
   
-The federal Census produces a plethora of datasets on a variety of topics tabulated in a number of different ways. In particular, the Census is known for population counts, including down to census tracts, or relatively small areas that average 4,000 inhabitants. Data at that detailed level is useful, but sometimes it's also helpful to roll up some of the information.
+The US Federal Census produces a plethora of datasets on a variety of topics tabulated in a number of different ways. In particular, the Census is known for population counts, including down to census tracts, or relatively small areas that average 4,000 inhabitants. Data at that detailed level is useful, but sometimes it's also helpful to roll up some of the information.
 
 **For this challenge, we want you to take the [2000 to 2010 Census Tract Population Change](https://www.census.gov/data/tables/time-series/dec/metro-micro/tract-change-00-10.html) dataset, perform a few calculations and then write out a new file with the summarized data.
 
