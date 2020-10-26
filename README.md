@@ -46,6 +46,7 @@ Note that census tracts within a Core Based Statstical Area are not necessarily 
 ## Data Engineering
 
 The program handles following scenarios of the input file:
+- Scale to Infinity: The alogrithm and implementation framework can handle any large file size (think Peta!). This provides a robust scaling technique for teams that don't know how large the dataset can grow over a period of time.
 - Making the input file reading easier for frequent use. The program will automatically read the input file from the top most position in the file directory. This mechanism becomes useful for frequent updates such as nightly, monthly, quarterly, etc.
 - Inconsistant data types for the columns: we have noticed that sometimes the elements are integers and sometimes they are strings. We handle both scenarios. 
 - Missing data: We have found a lot of missing elements in the file. For the required 6 data elements, we implemented an appropriate strategy by either a substitued value or a derived value in-place of the null or empty cell. This is done to provide a holistic picture of the result.
