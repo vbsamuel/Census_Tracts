@@ -52,13 +52,13 @@ Following 6 data elements will be written to the output file in the below order:
 
 (2) CBSA_T : Core Based Statistical Area Code Title (i.e., CBSA_T). For the CBSA_T missing we have substituted with "NaN, STATE INITIAL". The "STATE INITIAL" value is two digit alphabet corresponding to the state value from ST10. Instead of using plain "ST10" we used the state prefix such as CA, TX, etc to make it easy for reading.
   
-(3) TRACTS : total number of census tracts for the Core Based Statistical Area Title
+(3) TRACTS : Total number of census tracts for the Core Based Statistical Area Title. This is calculated by total count of unique tracts in the Core Based Statistical Area Title.
 
-(4) Pop2000	: total population in the CBSA in 2000
+(4) Pop2000	: total population in the CBSA in 2000. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2000.
 
-(5) Pop2010	:total population in the CBSA in 2010
+(5) Pop2010	:total population in the CBSA in 2010. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2010.
 
-(6) NewAvePPCHG : average population percent change for census tracts in this CBSA. Round to two decimal places using standard rounding conventions. (Please note that the Any percentage between 0.005% and 0.010%, inclusive, should round to 0.01% and anything less than 0.005% should round to 0.00%)
+(6) NewAvePPCHG : average population percent change for census tracts in the Core Based Statistical Area Title. The unit is in %-percentage. We have rounded the value to two decimal places using standard rounding conventions. (Please note that the Any percentage between 0.005% and 0.010%, inclusive, should round to 0.01% and anything less than 0.005% should round to 0.00%)
 
 
 The lines in the output file will be sorted by Core Based Statstical Area Code (ascending)
