@@ -4,10 +4,9 @@ import csv
 import os
 
 
-FullPathFileName=path('input/censustract-00-10.csv')
 
 ##creating list of list of row values in the original list
-with open(FullPathFileName, newline='') as f:
+with open('./input/censustract-00-10.csv', newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
