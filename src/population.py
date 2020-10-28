@@ -4,7 +4,7 @@ import csv
 import os
 
 
-FullPathFileName=path('/input/censustract-00-10.csv')
+FullPathFileName=path('./input/censustract-00-10.csv')
 
 ##creating list of list of row values in the original list
 with open(FullPathFileName, newline='') as f:
@@ -213,7 +213,7 @@ NewRows.insert(0, ["CBSA09","CBSA_T","Total Tracts", "Total Pop 2000", "Total Po
 Final_Output = NewRows
 
 # opening the csv file in 'w+' mode 
-file = open('/output/report.csv', 'w+', newline ='') 
+file = open('./output/report.csv', 'w+', newline ='') 
   
 # writing the data into the file 
 with file:     
