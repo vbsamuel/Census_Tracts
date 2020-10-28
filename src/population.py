@@ -206,7 +206,8 @@ z=len(TRACTS_list)
 for b in range(0,z):
     NewRows.insert(b,[NEWCBSA_T_Key_List[b], CBSAT_flatten_list2[b],TRACTS_list[b],POP00_list[b],POP10_list[b],PPCHG_list[b]])
     
-NewRows.insert(0, ["CBSA09","CBSA_T","Total Tracts", "Total Pop 2000", "Total Pop 2010", "Average %Pop Change"])
+##Removing this to conform to testing parameters... can include if the user needs header info
+##NewRows.insert(0, ["CBSA09","CBSA_T","Total Tracts", "Total Pop 2000", "Total Pop 2010", "Average %Pop Change"])
 
 #### Writing to the final output csv file
 Final_Output = NewRows
