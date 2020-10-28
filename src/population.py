@@ -51,7 +51,7 @@ for i in range(1,limit1):
     if(CBSA_T_Values[i]=="") or (CBSA_T_Values[i]==" "):
         CBSA_T_Values[i]='"NaN, ' +ST10_Values[i]+ '"'
     else:
-        CBSA_T_Values[i]='"'+CBSA_T_Values[i]+'"'
+        CBSA_T_Values[i]=CBSA_T_Values[i]
     i=i+1
 
 
