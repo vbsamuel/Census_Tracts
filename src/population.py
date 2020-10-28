@@ -1,113 +1,224 @@
-## Importing libraries
-import pandas as pd
-import numpy as np
-import seaborn as sns
+##!/usr/bin/env python3
+
 import csv
 import os
 
-## Loading the input file
-## We are opening the top most file from the input folder
-path='../input'
-file = os.listdir(path)
-filename = file[0]
-FullPathFileName = os.path.join(path,filename)
-df01 = pd.read_csv(FullPathFileName, encoding = "ISO-8859-1", engine='python')
-df02=df01.copy()
 
-### Fill-in empty value for CBSA09 with COU10
-df02['CBSA09'] = df02.apply(lambda row: row['COU10'] if np.isnan(row['CBSA09']) else row['CBSA09'], axis=1)
+FullPathFileName=path('/input/censustract-00-10.csv')
+
+##creating list of list of row values in the original list
+with open(FullPathFileName, newline='') as f:
+    reader = csv.reader(f)
+    data = list(reader)
+
+##creating list of list of column values 
+columns = [list(x) for x in zip(*data)]
+
+##Position of the required column values in the original list
+def findItem(theList, item):
+    return [(ind) for ind in range(len(theList)) if item in theList[ind]]
+
+ST10=findItem(columns, 'ST10')
+COU10=findItem(columns, 'COU10')
+CBSA09=findItem(columns, 'CBSA09') 
+CBSA_T=findItem(columns, 'CBSA_T')
+POP00=findItem(columns, 'POP00') 
+POP10=findItem(columns, 'POP10')
+PPCHG=findItem(columns, 'PPCHG') 
+
+ps_ST10=ST10[0]
+ps_COU10=COU10[0]
+ps_CBSA09=CBSA09[0]
+ps_CBSA_T=CBSA_T[0]
+ps_POP00=POP00[0]
+ps_POP10=POP10[0]
+ps_PPCHG=PPCHG[0]
+
+##creating a temp list of required column values
+ST10_Values=columns[ps_ST10]
+COU10_Values=columns[ps_COU10]
+CBSA09_Values=columns[ps_CBSA09]
+CBSA_T_Values=columns[ps_CBSA_T]
+POP00_Values=columns[ps_POP00]
+POP10_Values=columns[ps_POP10]
+PPCHG_Values=columns[ps_PPCHG]
 
 
-## Sum the number of counts for Census Tracts
-df02['TRACTS']=df02.groupby('CBSA09')['CBSA09'].transform("count")
-
-
-## Preparing CBSA_T - forming a state identifier for processing missing value
-df03 = df02[['ST10','CBSA_T']]
-df04 = df03.drop_duplicates().reset_index(drop=True)
-df04['NewCBSA_T'] = df04['CBSA_T'].str[-2:]
-df05=df04[['ST10','NewCBSA_T']]
-df06=df05.groupby('ST10').last().reset_index()
-dict1=dict(df06)
-
-
-## Preparing CBSA_T - key dictionary for state and corresponding CBSA_T file
-new_keys = list(dict1['ST10'])
-new_values = list(dict1['NewCBSA_T'])
-dict2 = dict(zip(new_keys, new_values))
-
-
-## Preparing CBSA_T - replace the NaN values in CBSA_T with the curresponding State
-def foo(x):
-    if str(x[1])=='nan':
-        return "NaN, " + dict2[x[0]]
+######### Substituted the value of missing CBSA09 with COU10 and CBSA_T with ST10
+limit1 = len(CBSA09_Values)
+for i in range(1,limit1):
+    if (CBSA09_Values[i]=="") or (CBSA09_Values[i]==" ")or (CBSA09_Values[i]=="NaN") or (CBSA09_Values[i] == "X"):
+        CBSA09_Values[i]=COU10_Values[i]
+    if(CBSA_T_Values[i]=="") or (CBSA_T_Values[i]==" "):
+        CBSA_T_Values[i]='"NaN, ' +ST10_Values[i]+ '"'
     else:
-        return x[1]
-
-## Preparing CBSA_T - Applying Substitute value
-df02['CBSA_T'] = pd.DataFrame(df02[['ST10','CBSA_T']].apply(foo, axis=1))
-
-## Wrapping '' around CBSA_T
-df02['CBSA_T']= df02['CBSA_T'].apply(lambda x : '"'+x+'"')
-
-## Local Assignment of datatypes for number column
-## they can come either in numbers or strings
-POP00_dty = df02['POP00'].dtypes
-POP10_dty = df02['POP00'].dtypes
-PPCHG_dty = df02['PPCHG'].dtypes
-
-## Function to removing "," from object datatype and
-## converting them to int & sum the values
-def Fo1(ser):
-    lst = list(ser)
-    lst2 = [int(x.replace(',','')) for x in lst]
-    return sum(lst2)
+        CBSA_T_Values[i]='"'+CBSA_T_Values[i]+'"'
+    i=i+1
 
 
-## Adding POP00 and appending to dataframe
-if (POP00_dty == "int64") or (POP00_dty == "float64"):
-    dict3 = dict(df02.groupby("CBSA09")["POP00"].sum())
-    df02["Pop2000"]=df02["CBSA09"].map(dict3)
-else:
-    dict3 = dict(df02.groupby("CBSA09")["POP00"].apply(Fo1))
-    df02["Pop2000"]=df02["CBSA09"].map(dict3)
 
+#######Counting Tracts by unique CSBA09 elements
+lst0 = CBSA09_Values[1:]
+frequency = {}
+TRACTS={}
+for item in lst0:
+    if (item in frequency):
+        frequency[item] += 1
+    else:
+        frequency[item] = 1
+for key, value in frequency.items():
+    TRACTS.update({key: value})
+
+NEWTRACTS_Dict1=TRACTS
+
+
+
+########Counting POP00
+process_CBSA09_Values=CBSA09_Values[1:]
+process_POP00_Values=POP00_Values[1:]
+
+##removing commas from POP00
+lst=process_POP00_Values
+lst2 = [int(x.replace(',','')) for x in lst]
+
+##creating a mesh of keys with empty values list 
+ID2 = {key: [] for key in process_CBSA09_Values} 
+  
+## loop to iterate through keys and values 
+for key, val in zip(process_CBSA09_Values, lst2): 
+    ID2[key].append(int(val))
+
+## Summation of the population
+NEWPOP00_Dict2 = {k:sum(v) for k,v in ID2.items()}
+
+
+
+#########Counting POP10
+process_POP10_Values=POP10_Values[1:]
+
+##removing commas from POP10
+lst3=process_POP10_Values
+lst4 = [int(x.replace(',','')) for x in lst3]
+
+##creating a mesh of keys with empty values list 
+ID3 = {key: [] for key in process_CBSA09_Values} 
+  
+## loop to iterate through keys and values 
+for key, val in zip(process_CBSA09_Values, lst4): 
+    ID3[key].append(int(val))
+
+## Summation of the population
+NEWPOP10_Dict3 = {k:sum(v) for k,v in ID3.items()}
+
+
+########Counting Average PPCHG
+process_PPCHG_Values=PPCHG_Values[1:]
+
+##removing commas from PPCHG
+lst5=process_PPCHG_Values
+lst6 = [(x.replace(',','')) for x in lst5]
+
+##removing (x) from PPCHG
+for i in range(0, len(lst6)):
+    if lst6[i]=="(x)" or lst6[i]=="(X)":
+        lst6[i]="0"
+
+##creating a mesh of keys with empty values list 
+ID4 = {key: [] for key in process_CBSA09_Values} 
+  
+## loop to iterate through keys and values 
+for key, val in zip(process_CBSA09_Values, lst6): 
+    ID4[key].append(val)
+
+
+### Converting PPCHG values to float
+values=0
+for k,v in ID4.items():
+    d_list = v
+    values = [float(item) for item in d_list]
+    ID4[k]  =  values
+
+
+## computing average population change and round it to 2 decimal place
+NEWPPCHG_Dict4 = {k:round(sum(v)/len(v),2) for k,v in ID4.items()}
+
+
+########Counting POP00
+process_CBSA_T_Values=CBSA_T_Values[1:]
+lst7=process_CBSA_T_Values
+
+##creating a mesh of keys with empty values list 
+ID5 = {key: [] for key in process_CBSA09_Values} 
+  
+## loop to iterate through keys and values 
+for key, val in zip(process_CBSA09_Values, lst7): 
+    ID5[key].append(val)
+
+## Mapping to CBSA09
+NEWCBSA_T_Dict5 = {k:v for k,v in ID5.items()}
+
+##### Preparing Lists to form CSV for final output.
+
+CBSAT_list=list(NEWCBSA_T_Dict5.values())
+TRACTS_list=list(NEWTRACTS_Dict1.values())
+POP00_list=list(NEWPOP00_Dict2.values())
+POP10_list=list(NEWPOP10_Dict3.values())
+PPCHG_list=list(NEWPPCHG_Dict4.values())
+
+
+### Gathering all the values to form List format
+def getList(dict): 
+    return dict.keys() 
+
+# Driver program - check TRACTS
+dict =  NEWCBSA_T_Dict5
+NEWCBSA_T_Key_List= list(getList(dict))
+
+# Driver program - check TRACTS
+dict =  NEWTRACTS_Dict1
+NEWTRACTS_Key_List= list(getList(dict))
     
-## Adding POP10 and appending to dataframe
-if (POP10_dty == "int64") or (POP10_dty == "float64"):
-    dict4 = dict(df02.groupby("CBSA09")["POP10"].sum())
-    df02["Pop2010"]=df02["CBSA09"].map(dict4)
+# Driver program - check POP00
+dict =  NEWPOP00_Dict2
+NEWPOP00_Key_List= list(getList(dict))
 
-else:
-    dict4 = dict(df02.groupby("CBSA09")["POP10"].apply(Fo1))
-    df02["Pop2010"]=df02["CBSA09"].map(dict4)
+# Driver program - check POP10
+dict =  NEWPOP10_Dict3
+NEWPOP10_Key_List= list(getList(dict))
 
-## Average of the PPCHG Value and rounded to two decimal places
-if (PPCHG_dty == "int64") or (PPCHG_dty == "float64"):
-    df03 = round(df02.groupby('CBSA09')['PPCHG'].mean(),2)
-    dict5 = dict(df03)
-    df02["NewAvePPCHG"]=df02["CBSA09"].map(dict5)
-else:
-    ## Removing "," and "(X)" from PPCHG
-    ## Converting PPCHG Object datatype to Float
-    df02["NewPPCHG"]=df02["PPCHG"].replace(["(X)"], 0)
-    df02["NewPPCHG"]=df02["NewPPCHG"].str.replace(",","").astype(float)
+# Driver program - check Ave PPCHG
+dict =  NEWPPCHG_Dict4
+NEWPPCHG_Key_List= list(getList(dict))
 
-    ## Average of the NewPPCHG Value and rounded to two decimal places
-    df03 = round(df02.groupby('CBSA09')['NewPPCHG'].mean(),2)
-    dict5 = dict(df03)
-    df02["NewAvePPCHG"]=df02["CBSA09"].map(dict5)
+### extracting unique CBSA_T values that correspond to CBSA09 
+CBSAT_Update_List = []
+def Extract(lst100): 
+    return [item[0:1] for item in lst100] 
 
+CBSAT_Update_List = Extract(CBSAT_list)
 
-## dropping all non required columns
-df05 = df02[["CBSA09","CBSA_T","TRACTS","Pop2000","Pop2010","NewAvePPCHG"]]
-output_df = pd.DataFrame(df05)
+## flattening the list for CBSA_T
+CBSAT_flatten_list2 ={}
+CBSAT_flatten_list2 = [item for subl in CBSAT_Update_List for item in subl]
 
+#### Preparing the final list of rows for the output file
+NewRows=[]
+z=len(TRACTS_list)
+for b in range(0,z):
+    NewRows.insert(b,[NEWCBSA_T_Key_List[b], CBSAT_flatten_list2[b],TRACTS_list[b],POP00_list[b],POP10_list[b],PPCHG_list[b]])
+    
+NewRows.insert(0, ["CBSA09","CBSA_T","Total Tracts", "Total Pop 2000", "Total Pop 2010", "Average %Pop Change"])
 
-## Preparing final output csv file
-## keep first duplicate row
-FinalResult_df1 = output_df.drop_duplicates().reset_index(drop=True)
-FinalResult_df1.sort_values(["CBSA09"], axis=0,ascending=True, inplace=True)
-FinalResult_df1.to_csv('../output/report.csv',index=False)
+#### Writing to the final output csv file
+Final_Output = NewRows
 
-## end of program ##
+# opening the csv file in 'w+' mode 
+file = open('/output/report.csv', 'w+', newline ='') 
+  
+# writing the data into the file 
+with file:     
+    write = csv.writer(file) 
+    write.writerows(Final_Output) 
+
+### end of program ###
+
