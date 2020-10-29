@@ -250,11 +250,26 @@ z=len(TRACTS_list)
 for b in range(0,z):
     NewRows.insert(b,[NEWCBSA_T_Key_List[b], CBSAT_flatten_list2[b],TRACTS_list[b],POP00_list[b],POP10_list[b],PPCHG_list[b]])
     
-##Removing this to conform to testing parameters... can include if the user needs header info
+##Removing this header to conform to testing parameters... can include if the user needs header row
 ##NewRows.insert(0, ["CBSA09","CBSA_T","Total Tracts", "Total Pop 2000", "Total Pop 2010", "Average %Pop Change"])
 
+## final sorting by CBSA09 value in ascending order - bubble sort
+NewRowsFinal=NewRows
+
+def Sort(sub_li): 
+    l = len(sub_li) 
+    for i in range(0, l): 
+        for j in range(0, l-i-1): 
+            if (sub_li[j][0] > sub_li[j + 1][0]): 
+                tempo = sub_li[j] 
+                sub_li[j]= sub_li[j + 1] 
+                sub_li[j + 1]= tempo 
+    return sub_li 
+
+Sort(NewRowsFinal)
+
 #### Writing to the final output csv file
-Final_Output = NewRows
+Final_Output = NewRowsFinal
 
 # opening the csv file in 'w+' mode 
 file = open('output/report.csv', 'w+', newline ='') 
@@ -265,4 +280,5 @@ with file:
     write.writerows(Final_Output) 
 
 ### end of program ###
+######################
 
