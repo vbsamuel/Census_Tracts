@@ -1,7 +1,7 @@
 Python Program that reads the input file '../input/censustract-00-10.csv', cleans, process the data, and provides the required results of the analysis as ' ../output/report.csv'
 
 Please use Python 3.7 or above version.
-Please have the following libraries installed
+Please not that we did not use any of the the following libraries
 - pandas 
 - numpy 
 - seaborn
