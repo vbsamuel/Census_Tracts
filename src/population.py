@@ -33,13 +33,6 @@ ps_POP00=POP00[0]
 ps_POP10=POP10[0]
 ps_PPCHG=PPCHG[0]
 
-##ensuring no empty values at CBSA_T... fixes uneven rows by possible ignore of null values
-for i in range(0,len(ST10_Values)):
-    temp1 = data[i]
-    temp2 = temp1[ps_CBSA_T]
-    if temp2=="" or temp2==" " or temp2=="''":
-        temp1[ps_CBSA_T]=str("NaN")
-        data[i]=temp1
 
 ##creating a temp list of required column values
 ST10_Values=columns[ps_ST10]
@@ -50,6 +43,15 @@ POP00_Values=columns[ps_POP00]
 POP10_Values=columns[ps_POP10]
 PPCHG_Values=columns[ps_PPCHG]
 
+
+##ensuring no empty values at CBSA_T... fixes uneven rows by possible ignore of null values
+for i in range(0,len(ST10_Values)):
+    temp1 = data[i]
+    temp2 = temp1[ps_CBSA_T]
+    if temp2=="" or temp2==" " or temp2=="''":
+        temp1[ps_CBSA_T]=str("NaN")
+        data[i]=temp1
+        
 
 ######### Substituted the value of missing CBSA09 with COU10 and CBSA_T with ST10
 limit1 = len(CBSA09_Values)
