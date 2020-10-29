@@ -51,20 +51,54 @@ for i in range(0,len(ST10_Values)):
     if temp2=="" or temp2==" " or temp2=="''":
         temp1[ps_CBSA_T]=str("NaN")
         data[i]=temp1
+   
         
-
 ######### Substituted the value of missing CBSA09 with COU10 and CBSA_T with ST10
 limit1 = len(CBSA09_Values)
 for i in range(1,limit1):
     if (CBSA09_Values[i]=="") or (CBSA09_Values[i]==" ")or (CBSA09_Values[i]=="NaN") or (CBSA09_Values[i] == "X"):
         CBSA09_Values[i]=COU10_Values[i]
     if(CBSA_T_Values[i]=="NaN") or (CBSA_T_Values[i]==""):
-        CBSA_T_Values[i]='"NaN, ' +ST10_Values[i]+ '"'
+        CBSA_T_Values[i]=ST10_Values[i]
     else:
         CBSA_T_Values[i]=CBSA_T_Values[i]
     i=i+1
 
 
+#######forming a substitue value for state initials
+##form a state initial list
+suffixes = [item.split()[-1] for item in CBSA_T_Values]
+
+##create a mapping between state initial and state id
+limit3=len(ST10_Values)
+temp3_ST10=['' for i in range(limit3)]
+temp4_suffix=['' for i in range(limit3)]
+j=0
+for i in range(0,limit3):
+    if (ST10_Values[i]!=suffixes[i]):
+        temp3_ST10[j]=ST10_Values[i]
+        temp4_suffix[j]=suffixes[i]
+        j=j+1
+temp5_ST10=temp3_ST10[0:j]
+temp6_suffix=temp4_suffix[0:j]
+
+##creating unique list of state initials and state id
+# using dictionary comprehension 
+# to convert lists to dictionary 
+refer_state ={}
+refer_state ={temp5_ST10[i]: temp6_suffix[i] for i in range(j)} 
+  
+# Resultant list of state suffix with replaced value
+
+state_replaced_list = [x if x not in refer_state else refer_state[x] for x in suffixes]
+
+for i in range(0,limit1):
+    if(CBSA_T_Values[i]==ST10_Values[i]):
+        CBSA_T_Values[i]="NaN, "+state_replaced_list[i]
+    else:
+        CBSA_T_Values[i]=CBSA_T_Values[i]
+    i=i+1
+    
 
 #######Counting Tracts by unique CSBA09 elements
 lst0 = CBSA09_Values[1:]
