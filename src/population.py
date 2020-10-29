@@ -256,15 +256,15 @@ for b in range(0,z):
 ## final sorting by CBSA09 value in ascending order - bubble sort
 NewRowsFinal=NewRows
 
-def Sort(sub_li): 
-    l = len(sub_li) 
+def Sort(sub_list): 
+    l = len(sub_list) 
     for i in range(0, l): 
         for j in range(0, l-i-1): 
-            if (sub_li[j][0] > sub_li[j + 1][0]): 
-                tempo = sub_li[j] 
-                sub_li[j]= sub_li[j + 1] 
-                sub_li[j + 1]= tempo 
-    return sub_li 
+            if (sub_list[j][0] > sub_list[j + 1][0]): 
+                tempo = sub_list[j] 
+                sub_list[j]= sub_list[j + 1] 
+                sub_list[j + 1]= tempo 
+    return sub_list 
 
 Sort(NewRowsFinal)
 
