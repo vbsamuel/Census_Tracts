@@ -44,6 +44,7 @@ We will get an output file that provides information about each of the Core Base
 Note that census tracts within a Core Based Statstical Area are not necessarily grouped together in the input file, and that there will be a small minority of census tracts that fall outside of any Core Based Statistical Area.
 
 ## Data Engineering
+We DID NOT use any of the Python Pandas or numpy or other libraries for analysis. This was done to demonstrate that data analysis is still possible by foundational data structures and algorithms... 
 
 The program handles following scenarios of the input file:
 - Scale to Infinity: The alogrithm and implementation framework can handle any large file size (think Peta!). This provides a robust scaling technique for teams that don't know how large the dataset can grow over a period of time.
@@ -60,17 +61,17 @@ After reading and processing the input file, the code will create an output file
 
 Following 6 data elements will be written to the output file in the below order:
 
-(1) CBSA09 : Core Based Statstical Area Code (i.e., CBSA09). Any value from 1 to 720 corresponds to COU10 column in the input file. This is because the original CBSA09 column had NULL data. Values from 10020 and upwards (all 5-digit numbers) corresponds to the original CSBA09 value.
+(1) Core Based Statstical Area Code (i.e., CBSA09). Any value from 1 to 720 corresponds to COU10 column in the input file. This is because the original CBSA09 column had NULL data. Values from 10020 and upwards (all 5-digit numbers) corresponds to the original CSBA09 value.
 
-(2) CBSA_T : Core Based Statistical Area Code Title (i.e. CBSA_T). For the CBSA_T missing values we have substituted with "NaN, STATE INITIAL". The "STATE INITIAL" value is two digit alphabet to identify which state it belongs. The State Initiates are derived from ST10 and available CBSA_T data from the data set. Instead of using plain "ST10" we used the state prefix such as CA, TX, WY etc. to make it easy for the reader to identify which state the row belongs to. This helps in reducing time for cross-reference and excel look-ups.
+(2) Core Based Statistical Area Code Title (i.e. CBSA_T). For the CBSA_T missing values we have substituted with "NaN, STATE INITIAL". The "STATE INITIAL" value is two digit alphabet to identify which state it belongs. The State Initiates are derived from ST10 and available CBSA_T data from the data set. Instead of using plain "ST10" we used the state prefix such as CA, TX, WY etc. to make it easy for the reader to identify which state the row belongs to. This helps in reducing time for cross-reference and excel look-ups.
   
-(3) TRACTS : Total number of census tracts for the Core Based Statistical Area Title. This is calculated by total count of unique tracts in the Core Based Statistical Area Title.
+(3) Total number of census tracts for the Core Based Statistical Area Title. This is calculated by total count of unique tracts in the Core Based Statistical Area Title.
 
-(4) Pop2000	: Total population in the CBSA in 2000. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2000.
+(4) Total population in the CBSA in 2000. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2000.
 
-(5) Pop2010	:Total population in the CBSA in 2010. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2010.
+(5) Total population in the CBSA in 2010. This is calculated from individual population count for each of the tracts in the Core Based Statistical Area Title for the year 2010.
 
-(6) NewAvePPCHG : Average population percent change for census tracts in the Core Based Statistical Area Title. The unit is in %-percentage. We have rounded the value to two decimal places using standard rounding conventions. (Please note that the any percentage between 0.005% and 0.010%, inclusive has been rounded to 0.01% and anything less than 0.005% has been round to 0.00%)
+(6) Average population percent change for census tracts in the Core Based Statistical Area Title. The unit is in %-percentage. We have rounded the value to two decimal places using standard rounding conventions. (Please note that the any percentage between 0.005% and 0.010%, inclusive has been rounded to 0.01% and anything less than 0.005% has been round to 0.00%)
 
 
 The lines in the output file will be sorted by Core Based Statstical Area Code (ascending)
