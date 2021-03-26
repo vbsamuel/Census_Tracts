@@ -16,7 +16,7 @@ The US Federal Census produces a plethora of datasets on a variety of topics tab
 
 
 ## Input dataset
-We will use an input file, `censustract-00-10.csv`, Below is a sample `censustract-00-10.csv` file: 
+I used an input file, `censustract-00-10.csv`, Below is a sample `censustract-00-10.csv` file: 
 ```
 GEOID,ST10,COU10,TRACT10,AREAL10,AREAW10,CSA09,CBSA09,CBSA_T,MDIV09,CSI,COFLG,POP00,HU00,POP10,HU10,NPCHG,PPCHG,NHCHG,PHCHG
 02130000100,02,130,000100,4835.518216,1793.906364,,28540,"Ketchikan, AK",,2,C,3801,1736,3484,1694,-317,-8.34,-42,-2.42
@@ -44,7 +44,7 @@ We will get an output file that provides information about each of the Core Base
 Note that census tracts within a Core Based Statstical Area are not necessarily grouped together in the input file, and that there will be a small minority of census tracts that fall outside of any Core Based Statistical Area.
 
 ## Data Engineering
-We DID NOT use any of the Python Pandas or numpy or other libraries for analysis. This was done to demonstrate that data analysis is still possible by foundational data structures and algorithms... 
+I DID NOT use any of the Python Pandas or numpy or other libraries for analysis. This was done to demonstrate that data analysis can be performed using only foundational data structures and algorithms... 
 
 The program handles following scenarios of the input file:
 - Scale to Infinity: The alogrithm and implementation framework can handle any large file size (think Peta!). This provides a robust scaling technique for teams that don't know how large the dataset can grow over a period of time.
